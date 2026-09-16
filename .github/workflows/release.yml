@@ -1,0 +1,67 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+  # Allow manual triggering from the Actions tab. Useful for re-running the
+  # release flow when a push from the default GITHUB_TOKEN does not
+  # automatically trigger this workflow.
+  workflow_dispatch:
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Setup Node.js 24.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install Dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      # Trusted publishing needs a recent npm; the one bundled with Node 24 is
+      # older than the OIDC exchange requires.
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Create Release Pull Request or Publish to npm
+        id: changesets
+        uses: changesets/action@8488615a623b1b9c987934bb89eae8af6a946ac1 # v2.1.1
+        with:
+          version-script: pnpm ci:version
+          publish-script: pnpm ci:publish
+          create-github-releases: false
+
+      - name: Report what the run decided
+        if: always()
+        run: |
+          echo "event_name  = ${{ github.event_name }}"
+          echo "ref         = ${{ github.ref }}"
+          echo "published   = ${{ steps.changesets.outputs.published }}"
+          echo "packages    = ${{ steps.changesets.outputs.published-packages }}"

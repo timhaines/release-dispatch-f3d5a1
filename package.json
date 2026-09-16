@@ -1,0 +1,12 @@
+{
+  "name": "release-dispatch-fixture",
+  "private": true,
+  "packageManager": "pnpm@11.24.0",
+  "scripts": {
+    "ci:version": "changeset version",
+    "ci:publish": "changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^3.0.1"
+  }
+}

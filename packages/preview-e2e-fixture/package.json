@@ -1,0 +1,14 @@
+{
+  "name": "@timhaines/preview-e2e-fixture",
+  "version": "0.0.1789366033",
+  "description": "Fixture package for a release-integrity proof of concept. Not a real library.",
+  "license": "MIT",
+  "main": "index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/timhaines/release-dispatch-f3d5a1.git"
+  }
+}

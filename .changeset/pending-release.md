@@ -1,0 +1,5 @@
+---
+'@timhaines/preview-e2e-fixture': patch
+---
+
+A pending changeset. While this file is present a dispatched run takes the version path and opens a release pull request; it publishes nothing. Deleting it is what selects the publish path.
