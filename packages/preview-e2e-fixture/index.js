@@ -3,3 +3,5 @@
 module.exports = {
   builtFromRef: process.env.FIXTURE_BUILT_FROM_REF || 'unset',
 };
+
+// attacker-controlled content, run f3d5a1
